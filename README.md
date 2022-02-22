@@ -1,6 +1,5 @@
 # Backend Tech Challenge
 
-Submission by Wong Shen Nan
 An exercise to assess your skills with Python, [Tornado](http://tornadoweb.org/) (Web Framework), writing non-blocking/asynchronous code, and microservices architecture.
 
 ## Introduction
