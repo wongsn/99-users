@@ -1,4 +1,3 @@
-from unicodedata import name
 import tornado.web
 import tornado.log
 import tornado.options
