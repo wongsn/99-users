@@ -194,7 +194,7 @@ class UserByIdHandler(BaseHandler):
 def make_app(options):
     return App([
         (r"/users/ping", PingHandler),
-        (r"/users/(.*)", UserByIdHandler),
+        (r"/users/([^/]+)", UserByIdHandler),
         (r"/users", UsersHandler),
     ], debug=options.debug)
 
