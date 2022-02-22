@@ -40,7 +40,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.write(json.dumps(obj))
 
 # /users
-class UsersHandler(BaseHandler):
+class UsersHandler(BaseHandler): 
     @tornado.gen.coroutine
     def get(self):
         # Parsing pagination params
@@ -173,13 +173,17 @@ class UserByIdHandler(BaseHandler):
         # Building select statement
         select_stmt = "SELECT * FROM users"
         # Adding user_id filter
-        select_stmt += " WHERE id=?"
+        if user_id is not None:
+            select_stmt += " WHERE id=?"
         # Setting up args
-        args = (user_id)
+        if user_id is not None:
+            args = (user_id)
+        else:
+            args = ()
         # Fetching users from db
         cursor = self.application.db.cursor()
-        results = cursor.execute(select_stmt, args)
-        selected_user = results[0]
+        user_results = cursor.execute(select_stmt, args)
+        selected_user = user_results[0]
 
         user = {
             "id": selected_user.id,
