@@ -173,7 +173,7 @@ class UserByIdHandler(BaseHandler):
         # Building select statement
         select_stmt = "SELECT * FROM users"
         # Adding user_id filter
-        select_stmt += " WHERE user_id=?"
+        select_stmt += " WHERE id=?"
         # Setting up args
         args = (user_id)
         # Fetching users from db
