@@ -1,7 +1,10 @@
 # Backend Tech Challenge
+
+Submission by Wong Shen Nan
 An exercise to assess your skills with Python, [Tornado](http://tornadoweb.org/) (Web Framework), writing non-blocking/asynchronous code, and microservices architecture.
 
 ## Introduction
+
 We're building a system that stores information about users and properties that are available to rent or buy. The system is designed as a set of small web applications that each perform a specific task (otherwise known as "microservices").
 
 Please read [the Wikipedia article about microservices](https://en.wikipedia.org/wiki/Microservices) if you are not familar with the architecture before.
@@ -9,6 +12,7 @@ Please read [the Wikipedia article about microservices](https://en.wikipedia.org
 Some parts of the system have been built already. We need to your help to complete the rest!
 
 ### Architecture
+
 This system comprises of 3 independent web applications:
 
 - **Listing service:** Stores all the information about properties that are available to rent and buy
@@ -22,6 +26,7 @@ Services are free to store the data in any format they wish (in a SQL table, or 
 How does the mobile app or user-facing website access the data in the system? This is where the public API layer comes in. The public API layer is a web application that contains APIs that can be called by external clients/applications. This web application is responsible for interacting with the listing/user service through its APIs to pull out the relevant data and return it to the external caller in the appropriate format.
 
 ### 1) Listing Service
+
 The listing service stores information about properties that are available to rent or buy. These are the fields available in a listing object:
 
 - `id (int)`: Listing ID _(auto-generated)_
@@ -32,7 +37,9 @@ The listing service stores information about properties that are available to re
 - `updated_at (int)`: Updated at timestamp. In microseconds _(auto-generated)_
 
 #### APIs
+
 ##### Get all listings
+
 Returns all the listings available in the db (sorted in descending order of creation date). Callers can use `page_num` and `page_size` to paginate through all the listings available. Optionally, you can specify a `user_id` to only retrieve listings created by that user.
 
 ```
@@ -43,6 +50,7 @@ page_num = int # Default = 1
 page_size = int # Default = 10
 user_id = str # Optional. Will only return listings by this user if specified
 ```
+
 ```json
 Response:
 {
@@ -61,6 +69,7 @@ Response:
 ```
 
 ##### Create listing
+
 ```
 URL: POST /listings
 Content-Type: application/x-www-form-urlencoded
@@ -70,6 +79,7 @@ user_id = int
 listing_type = str
 price = int
 ```
+
 ```json
 Response:
 {
@@ -86,6 +96,7 @@ Response:
 ```
 
 ### 2) User Service
+
 The user service stores information about all the users on the system. Fields available in the user object:
 
 - `id (int)`: User ID _(auto-generated)_
@@ -94,7 +105,9 @@ The user service stores information about all the users on the system. Fields av
 - `updated_at (int)`: Updated at timestamp. In microseconds _(auto-generated)_
 
 #### APIs
+
 ##### Get all users
+
 Returns all the users available in the db (sorted in descending order of creation date).
 
 ```
@@ -104,6 +117,7 @@ Parameters:
 page_num = int # Default = 1
 page_size = int # Default = 10
 ```
+
 ```json
 Response:
 {
@@ -120,10 +134,13 @@ Response:
 ```
 
 ##### Get specific user
+
 Retrieve a user by ID
+
 ```
 URL: GET /users/{id}
 ```
+
 ```json
 Response:
 {
@@ -138,6 +155,7 @@ Response:
 ```
 
 ##### Create user
+
 ```
 URL: POST /users
 Content-Type: application/x-www-form-urlencoded
@@ -145,6 +163,7 @@ Content-Type: application/x-www-form-urlencoded
 Parameters: (All parameters are required)
 name = str
 ```
+
 ```json
 Response:
 {
@@ -159,9 +178,11 @@ Response:
 ```
 
 ### 3) Public APIs
+
 These are the public facing APIs that can be called by external clients such as mobile applications or the user facing website.
 
 ##### Get listings
+
 Get all the listings available in the system (sorted in descending order of creation date). Callers can use `page_num` and `page_size` to paginate through all the listings available. Optionally, you can specify a `user_id` to only retrieve listings created by that user.
 
 ```
@@ -172,39 +193,42 @@ page_num = int # Default = 1
 page_size = int # Default = 10
 user_id = str # Optional
 ```
+
 ```json
 {
-    "result": true,
-    "listings": [
-        {
-            "id": 1,
-            "listing_type": "rent",
-            "price": 6000,
-            "created_at": 1475820997000000,
-            "updated_at": 1475820997000000,
-            "user": {
-                "id": 1,
-                "name": "Suresh Subramaniam",
-                "created_at": 1475820997000000,
-                "updated_at": 1475820997000000,
-            },
-        }
-    ]
+  "result": true,
+  "listings": [
+    {
+      "id": 1,
+      "listing_type": "rent",
+      "price": 6000,
+      "created_at": 1475820997000000,
+      "updated_at": 1475820997000000,
+      "user": {
+        "id": 1,
+        "name": "Suresh Subramaniam",
+        "created_at": 1475820997000000,
+        "updated_at": 1475820997000000
+      }
+    }
+  ]
 }
-
 ```
 
 ##### Create user
+
 ```
 URL: POST /public-api/users
 Content-Type: application/json
 ```
+
 ```json
 Request body: (JSON body)
 {
     "name": "Lorel Ipsum"
 }
 ```
+
 ```json
 Response:
 {
@@ -218,10 +242,12 @@ Response:
 ```
 
 ##### Create listing
+
 ```
 URL: POST /public-api/listings
 Content-Type: application/json
 ```
+
 ```json
 Request body: (JSON body)
 {
@@ -230,6 +256,7 @@ Request body: (JSON body)
     "price": 6000
 }
 ```
+
 ```json
 Response:
 {
@@ -245,6 +272,7 @@ Response:
 ```
 
 ## Requirements
+
 The listing service has been built already. You need to build the remaining two components: the user service and the public API layer. The implementation of the listing service can serve as a good starting point to learn more about how to structure a web application using the Tornado web framework.
 
 The first priority would be to get a working system up and running! A great submission would demonstrate a grasp of the principles of microservice architecture.
@@ -252,15 +280,19 @@ The first priority would be to get a working system up and running! A great subm
 You are required to use tornado's built in framework for HTTP request.
 
 ## Setup
+
 We will be using Python 3 for this exercise.
 
 ### Install pip
+
 pip is a handy tool to install libraries/dependencies for your python programs. pip should already come installed on your system. Head over to https://pip.pypa.io/en/stable/installing/ for steps to install pip if it's not available.
 
 ### Install virtualenv
+
 We use virtualenv to create an isolated running environment to install dependencies and launch the web application. Head over to https://virtualenv.pypa.io/en/latest/installation.html for instructions to install virtualenv.
 
 ### Install dependencies
+
 Once you have pip and virtualenv set up, we can proceed to create the environment to run our web applications:
 
 ```bash
@@ -276,6 +308,7 @@ source env/bin/activate
 # Install the required dependencies/libraries
 pip install -r python-libs.txt
 ```
+
 You'll see `(env)` show up at the beginning of the command line if you've started virtual environment successfully. To check if the dependencies are installed correctly, run `pip freeze` and check if the output looks something like this:
 
 ```
@@ -283,18 +316,21 @@ tornado==6.1
 ```
 
 ### Run the listing service
+
 Now we're all set to run the listing service!
 
 ```bash
 # Run the listing service
 python listing_service.py --port=6000 --debug=true
 ```
+
 The following settings that can be configured via command-line arguments when starting the app:
 
 - `port`: The port number to run the application on (default: `6000`)
 - `debug`: Runs the application in debug mode. Applications running in debug mode will automatically reload in response to file changes. (default: `true`)
 
 ### Create listings
+
 Time to add some data into the listing service!
 
 ```bash
@@ -305,6 +341,7 @@ curl localhost:8888/listings -XPOST \
 ```
 
 ## Resources
+
 Useful resources to help you get started:
 
 - Tornado web application framework: http://www.tornadoweb.org/en/stable/
