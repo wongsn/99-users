@@ -101,6 +101,9 @@ class UsersHandler(BaseHandler):
         # Collecting required params
         name = self.get_argument("name")
 
+        # add %20 escape characters
+        name = name.replace(" ", "+")
+
         # Validating inputs
         errors = []
         name_val = self._validate_name(name, errors)
