@@ -1,1 +1,1 @@
-web: python user_service.py --port=6000 --debug=true
+web: python user_service.py --debug=true

@@ -7,6 +7,7 @@ import logging
 import json
 import time
 import re
+import os 
 
 class App(tornado.web.Application):
 
@@ -78,7 +79,7 @@ class UsersHandler(BaseHandler):
         offset = (page_num - 1) * page_size
         select_stmt += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
 
-        # Fetching listings from db
+        # Fetching users from db
         if name is not None:
             args = (name, limit, offset)
         else:
@@ -111,7 +112,7 @@ class UsersHandler(BaseHandler):
             self.write_json({"result": False, "errors": errors}, status_code=400)
             return
 
-        # Proceed to store the listing in our db
+        # Proceed to store the user in our db
         cursor = self.application.db.cursor()
         cursor.execute(
             "INSERT INTO 'users' "
@@ -121,12 +122,12 @@ class UsersHandler(BaseHandler):
         )
         self.application.db.commit()
 
-        # Error out if we fail to retrieve the newly created listing
+        # Error out if we fail to retrieve the newly created user
         if cursor.lastrowid is None:
             self.write_json(
                 {
                     "result": False, 
-                    "errors": ["Error while adding listing to db"]
+                    "errors": ["Error while adding user to db"]
                 }, 
                     status_code=500)
             return
@@ -175,7 +176,7 @@ class UserByIdHandler(BaseHandler):
         select_stmt += " WHERE user_id=?"
         # Setting up args
         args = (user_id)
-        # Fetching listings from db
+        # Fetching users from db
         cursor = self.application.db.cursor()
         results = cursor.execute(select_stmt, args)
         selected_user = results[0]
@@ -213,8 +214,9 @@ if __name__ == "__main__":
 
     # Create web app
     app = make_app(options)
-    app.listen(options.port)
-    logging.info("Starting listing service. PORT: {}, DEBUG: {}".format(options.port, options.debug))
+    port = int(os.environ.get("PORT", options.port))
+    app.listen(port)
+    logging.info("Starting user service. PORT: {}, DEBUG: {}".format(port, options.debug))
 
     # Start event loop
     tornado.ioloop.IOLoop.instance().start()
