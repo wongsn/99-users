@@ -102,7 +102,7 @@ class UsersHandler(BaseHandler):
         name = self.get_argument("name")
 
         # add %20 escape characters
-        name = name.replace(" ", "+")
+        name = name.replace(" ", "%20")
 
         # Validating inputs
         errors = []
