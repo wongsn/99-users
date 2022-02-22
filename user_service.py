@@ -163,6 +163,7 @@ class PingHandler(tornado.web.RequestHandler):
 class UserByIdHandler(BaseHandler):
     @tornado.gen.coroutine
     def get(self, user_id):
+        
         if user_id is not None:
             try:
                 user_id = int(user_id)
@@ -177,22 +178,22 @@ class UserByIdHandler(BaseHandler):
             select_stmt += " WHERE id=?"
         # Setting up args
         if user_id is not None:
-            args = (user_id)
-        else:
-            args = ()
+            args = (user_id,)
+        
         # Fetching users from db
         cursor = self.application.db.cursor()
         user_results = cursor.execute(select_stmt, args)
-        selected_user = user_results[0]
-
-        user = {
-            "id": selected_user.id,
-            "name": selected_user.name,
-            "created_at":selected_user.created_at,
-            "updated_at" :selected_user.updated_at,
-        }
         
-        self.write_json({"result": True, "userById": user})
+        users = []
+
+        for row in user_results:
+            fields = ["id", "name", "created_at", "updated_at"]
+            user = {
+                field: row[field] for field in fields
+            }
+            users.append(user)
+        
+        self.write_json({"result": True, "userById": users})
 
 
 def make_app(options):
